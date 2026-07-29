@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SupportOps Copilot is an auditable support investigation workflow with human approval boundaries.">
+  <meta property="og:title" content="SupportOps Copilot — Resolve the case. Improve the product.">
+  <meta property="og:description" content="An auditable, privacy-conscious support operations reference implementation.">
+  <title>SupportOps Copilot — Resolve the case. Improve the product.</title>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <nav>
+    <a class="brand" href="#top"><span>S</span> SupportOps</a>
+    <div class="nav-links"><a href="#product">Product</a><a href="#workflow">Workflow</a><a href="#architecture">Architecture</a><a href="#signals">Product signals</a><a class="source" href="https://github.com/Emmanuelasika/SupportOpsCopilot">Source ↗</a></div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">AUDITABLE SUPPORT OPERATIONS</div>
+        <h1>Resolve the case.<br><em>Improve the product.</em></h1>
+        <p>SupportOps Copilot turns sanitized customer issues into prioritized, owned, auditable investigations—and turns recurring patterns into product evidence.</p>
+        <div class="actions"><a class="primary" href="#product">See the product</a><a class="secondary" href="https://github.com/Emmanuelasika/SupportOpsCopilot#quick-start">Run locally →</a></div>
+        <div class="promise"><span>✓ No autonomous replies</span><span>✓ Redacted at intake</span><span>✓ Human approval boundary</span></div>
+      </div>
+      <div class="case-card">
+        <div class="card-top"><span class="case-id">CASE_7F13C9</span><span class="priority">P1</span></div>
+        <h3>Possible unauthorized project access</h3>
+        <p>Customer reports an unexpected role change after SSO login. Credential-shaped evidence was removed at intake.</p>
+        <div class="details"><div><small>AREA</small><b>Security</b></div><div><small>STATUS</small><b>Investigating</b></div><div><small>OWNER</small><b>platform-support</b></div><div><small>SLA</small><b class="clock">42 min</b></div></div>
+        <div class="timeline"><div class="done"><i></i><span><b>Created</b><small>Evidence sanitized · system</small></span></div><div class="done"><i></i><span><b>Assigned</b><small>platform-support · triage-lead</small></span></div><div><i></i><span><b>Investigation</b><small>Security runbook active</small></span></div></div>
+      </div>
+    </section>
+
+    <section class="trusted"><span>Built around support engineering fundamentals</span><div><b>OWNERSHIP</b><b>PRIVACY</b><b>OPERABILITY</b><b>PRODUCT FEEDBACK</b></div></section>
+
+    <section id="product" class="section">
+      <div class="heading"><span>THE PRODUCT</span><h2>One queue. Every decision visible.</h2><p>A complete local reference implementation for the work between ticket intake and engineering resolution.</p></div>
+      <div class="product-shot">
+        <aside><div class="mini-brand"><span>S</span> SupportOps</div><a class="active">▦ Case queue <b>12</b></a><a>◎ Insights</a><a>□ Runbooks</a><div class="aside-bottom"><small>POLICY</small><p>Customer messaging requires human approval.</p></div></aside>
+        <div class="app">
+          <div class="app-head"><div><h3>Case queue</h3><p>Prioritized by impact and SLA</p></div><button>+ New case</button></div>
+          <div class="filters"><span class="selected">All cases</span><span>New</span><span>Investigating</span><span>Awaiting approval</span><span>Resolved</span></div>
+          <div class="case-row head"><span>CASE</span><span>AREA</span><span>PRIORITY</span><span>OWNER</span><span>STATUS</span></div>
+          <div class="case-row"><div><b>Webhook signature failures</b><small>case_03e1a7 · 8 min ago</small></div><span>Technical</span><strong class="p1">P1</strong><span>on-call</span><em>Investigating</em></div>
+          <div class="case-row"><div><b>Cannot access billing portal</b><small>case_118fd2 · 21 min ago</small></div><span>Access</span><strong class="p2">P2</strong><span>accounts</span><em>New</em></div>
+          <div class="case-row"><div><b>Duplicate invoice charge</b><small>case_87ca12 · 47 min ago</small></div><span>Billing</span><strong class="p2">P2</strong><span>billing-ops</span><em>Awaiting approval</em></div>
+          <div class="case-row"><div><b>SDK timeout on large request</b><small>case_24f731 · 1h ago</small></div><span>Technical</span><strong class="p3">P3</strong><span>unassigned</span><em>New</em></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="section workflow">
+      <div class="heading"><span>WORKFLOW</span><h2>Support rigor, encoded.</h2></div>
+      <div class="steps">
+        <article><b>01</b><div class="step-icon">⌁</div><h3>Sanitize intake</h3><p>Credential-shaped values are redacted before case content or notes reach persistence.</p></article>
+        <article><b>02</b><div class="step-icon">◇</div><h3>Calibrate impact</h3><p>Risk, production environment, and customer impact determine priority and SLA.</p></article>
+        <article><b>03</b><div class="step-icon">↗</div><h3>Own the work</h3><p>Assignment and guarded transitions make the current operator and state explicit.</p></article>
+        <article><b>04</b><div class="step-icon">≋</div><h3>Preserve evidence</h3><p>Every change appends a timestamped, sanitized actor event to the audit trail.</p></article>
+        <article><b>05</b><div class="step-icon">⌘</div><h3>Close the loop</h3><p>Recurring fingerprints become product signals instead of repeated ticket labor.</p></article>
+      </div>
+    </section>
+
+    <section id="architecture" class="section architecture-section">
+      <div class="heading"><span>ARCHITECTURE</span><h2>Simple enough to inspect.<br>Strict enough to trust.</h2></div>
+      <div class="architecture">
+        <div class="arch-row"><div class="arch-label">INPUT</div><div class="arch-node wide"><b>Case intake</b><span>subject · description · impact · environment</span></div></div>
+        <div class="down">↓</div>
+        <div class="arch-row"><div class="arch-label">BOUNDARY</div><div class="arch-node boundary"><b>Recursive redaction</b><span>secrets removed before persistence</span></div><div class="arch-node"><b>Risk engine</b><span>priority + SLA deadline</span></div></div>
+        <div class="down">↓</div>
+        <div class="arch-row"><div class="arch-label">WORKFLOW</div><div class="arch-node"><b>Case ledger</b><span>filter · assign · retrieve</span></div><div class="arch-node"><b>State machine</b><span>guarded transitions</span></div><div class="arch-node"><b>Audit events</b><span>actor · action · time</span></div></div>
+        <div class="down">↓</div>
+        <div class="arch-row"><div class="arch-label">OUTPUT</div><div class="arch-node"><b>Safe export</b><span>Markdown handoff</span></div><div class="arch-node"><b>Runbooks</b><span>area-specific guidance</span></div><div class="arch-node insight"><b>Product insights</b><span>recurrence · overdue work</span></div></div>
+      </div>
+    </section>
+
+    <section id="signals" class="section signals">
+      <div class="heading"><span>SUPPORT → PRODUCT</span><h2>Recurring pain becomes visible.</h2><p>Ticket volume alone is not root-cause evidence. SupportOps groups sanitized fingerprints so teams can investigate confirmed patterns.</p></div>
+      <div class="signal-grid">
+        <div class="chart"><div class="chart-head"><b>Case volume by area</b><span>Last 30 days</span></div><div class="bars"><div><span>Technical</span><i style="--w:88%"></i><b>84</b></div><div><span>Access</span><i style="--w:61%"></i><b>58</b></div><div><span>Billing</span><i style="--w:43%"></i><b>41</b></div><div><span>Security</span><i style="--w:16%"></i><b>15</b></div></div></div>
+        <div class="pattern"><span class="pattern-label">RECURRING PATTERN</span><h3>Webhook signature verification</h3><div class="pattern-number">17 <small>cases</small></div><p>Same sanitized fingerprint across 6 integrations.</p><div class="recommendation"><b>Recommended product action</b><span>Improve raw-body middleware guidance and add a diagnostic example.</span></div></div>
+      </div>
+    </section>
+
+    <section class="section final"><span>OPEN SOURCE · MIT LICENSED</span><h2>Support is a product surface.</h2><p>Explore the implementation, run the workflow locally, and inspect every safety decision.</p><a class="primary" href="https://github.com/Emmanuelasika/SupportOpsCopilot">View SupportOps Copilot on GitHub ↗</a></section>
+  </main>
+  <footer><span>SupportOps Copilot · Human-owned support engineering</span><a href="https://github.com/Emmanuelasika">Emmanuel Asika</a></footer>
+</body>
+</html>
