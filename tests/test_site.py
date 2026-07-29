@@ -20,12 +20,16 @@ def test_pages_site_has_complete_navigation_and_assets():
     root = Path(__file__).parents[1]
     parser = PageParser()
     parser.feed((root / "docs/index.html").read_text(encoding="utf-8"))
-    assert {"top", "what-it-does", "users", "workflow", "example", "case-study",
-            "architecture", "quick-start", "safety", "limitations"} <= parser.ids
+    assert {"top", "case-file", "sanitization", "ownership", "handoff",
+            "run-it", "install-command"} <= parser.ids
     assert "site.css" in parser.links
-    assert "product.css" in parser.links
-    assert "syntax.css" in parser.links
-    assert (root / "docs/site.css").stat().st_size > 4_000
+    assert (root / "docs/site.css").stat().st_size > 18_000
+    for asset in (
+        "operations-command-desk.webp",
+        "operations-paper-grid.webp",
+        "safe-engineering-handoff.webp",
+    ):
+        assert (root / "docs/assets" / asset).stat().st_size > 40_000
 
 
 def test_pages_site_contains_a_real_case_and_safety_boundary():
@@ -34,28 +38,19 @@ def test_pages_site_contains_a_real_case_and_safety_boundary():
     assert "case_92fd8c10b614" in page
     assert "[REDACTED]" in page
     assert "409 Conflict" in page
-    assert "Not generated" in page
+    assert "No customer reply is generated or sent." in page
     assert "Emmanuel Asika" in page
     assert "Support Operations Workbench" in page
     assert "SupportOps Copilot" not in page
-    assert "WHO IT IS FOR" in page
-    assert "BEFORE PRODUCTION" in page
-    assert "Case queue" in page
-    assert "Lifecycle and audit" in page
-    assert "Safe engineering handoff ready" in page
-    assert 'class="badge p1"' in page
-    for token_class in (
-        "tok-prompt",
-        "tok-command",
-        "tok-flag",
-        "tok-url",
-        "tok-key",
-        "tok-string",
-        "tok-boolean",
-        "tok-secret",
-        "tok-redacted",
-    ):
-        assert token_class in page
-    assert "code-unsafe" in page
-    assert "code-safe" in page
-    assert "code-terminal" in page
+    assert "Open queue" in page
+    assert "Activity ledger" in page
+    assert "ENGINEERING BRIEF" in page
+    assert "SLA 00:42:16" in page
+    assert "Technical reproduction" in page
+    assert "assets/operations-command-desk.webp" in page
+    assert "assets/safe-engineering-handoff.webp" in page
+    assert 'property="og:image"' in page
+    assert 'class="line removed"' in page
+    assert 'class="line added"' in page
+    assert 'class="terminal"' in page
+    assert "What this proves—and what it does not." in page
