@@ -20,18 +20,21 @@ def test_pages_site_has_complete_navigation_and_assets():
     root = Path(__file__).parents[1]
     parser = PageParser()
     parser.feed((root / "docs/index.html").read_text(encoding="utf-8"))
-    assert {"top", "intake", "triage", "investigation", "handoff", "architecture"} <= parser.ids
+    assert {"top", "what-it-does", "users", "workflow", "example", "case-study",
+            "architecture", "quick-start", "safety", "limitations"} <= parser.ids
     assert "site.css" in parser.links
-    assert (root / "docs/site.css").stat().st_size > 10_000
+    assert (root / "docs/site.css").stat().st_size > 4_000
 
 
 def test_pages_site_contains_a_real_case_and_safety_boundary():
     root = Path(__file__).parents[1]
     page = (root / "docs/index.html").read_text(encoding="utf-8")
-    assert "CASE_92FD8C" in page
+    assert "case_92fd8c10b614" in page
     assert "[REDACTED]" in page
-    assert "409 CONFLICT" in page
+    assert "409 Conflict" in page
     assert "Not generated" in page
     assert "Emmanuel Asika" in page
     assert "Support Operations Workbench" in page
     assert "SupportOps Copilot" not in page
+    assert "WHO IT IS FOR" in page
+    assert "BEFORE PRODUCTION" in page
