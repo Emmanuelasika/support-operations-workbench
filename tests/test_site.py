@@ -23,6 +23,8 @@ def test_pages_site_has_complete_navigation_and_assets():
     assert {"top", "what-it-does", "users", "workflow", "example", "case-study",
             "architecture", "quick-start", "safety", "limitations"} <= parser.ids
     assert "site.css" in parser.links
+    assert "product.css" in parser.links
+    assert "syntax.css" in parser.links
     assert (root / "docs/site.css").stat().st_size > 4_000
 
 
@@ -38,3 +40,22 @@ def test_pages_site_contains_a_real_case_and_safety_boundary():
     assert "SupportOps Copilot" not in page
     assert "WHO IT IS FOR" in page
     assert "BEFORE PRODUCTION" in page
+    assert "Case queue" in page
+    assert "Lifecycle and audit" in page
+    assert "Safe engineering handoff ready" in page
+    assert 'class="badge p1"' in page
+    for token_class in (
+        "tok-prompt",
+        "tok-command",
+        "tok-flag",
+        "tok-url",
+        "tok-key",
+        "tok-string",
+        "tok-boolean",
+        "tok-secret",
+        "tok-redacted",
+    ):
+        assert token_class in page
+    assert "code-unsafe" in page
+    assert "code-safe" in page
+    assert "code-terminal" in page
