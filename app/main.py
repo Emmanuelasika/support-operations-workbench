@@ -1,4 +1,4 @@
-"""SupportOps Copilot: an internal investigation workflow, never an auto-reply bot.
+"""Support Operations Workbench: an investigation workflow, never an auto-reply bot.
 
 The application stores only redacted case evidence. Every state transition is
 audited and no endpoint sends customer-facing communication.
@@ -18,7 +18,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="SupportOps Copilot", version="1.0.0")
+app = FastAPI(title="Support Operations Workbench", version="1.0.0")
 DATABASE = Path(__file__).parent.parent / "supportops.sqlite3"
 SECRET = re.compile(r"\b(sk-[A-Za-z0-9_-]{8,}|Bearer\s+[A-Za-z0-9._-]+|(?:api[_-]?key|password|token)\s*[:=]\s*\S+)\b", re.I)
 Area = Literal["access", "billing", "technical", "security"]

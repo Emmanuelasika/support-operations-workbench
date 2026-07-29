@@ -1,1 +1,1 @@
-"""SupportOps Copilot internal investigation briefs."""
+"""Support Operations Workbench internal investigation briefs."""

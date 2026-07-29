@@ -20,13 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build container
-        run: docker build --tag supportops-copilot:ci .
+        run: docker build --tag support-operations-workbench:ci .
       - name: Smoke-test container
         run: |
-          docker run --detach --name supportops-ci --publish 8080:8080 supportops-copilot:ci
+          docker run --detach --name support-operations-workbench-ci --publish 8080:8080 support-operations-workbench:ci
           for attempt in {1..15}; do
             curl --fail http://127.0.0.1:8080/health && exit 0
             sleep 1
           done
-          docker logs supportops-ci
+          docker logs support-operations-workbench-ci
           exit 1
