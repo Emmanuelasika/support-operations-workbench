@@ -1,190 +1,40 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An annotated, end-to-end support engineering case study built by Emmanuel Asika.">
-  <meta property="og:title" content="Support Operations Workbench — case file 017">
-  <meta property="og:description" content="Watch one production webhook failure move from unsafe intake to an evidence-backed engineering handoff.">
-  <title>Support Operations Workbench / Case file 017</title>
-  <link rel="stylesheet" href="site.css">
-</head>
-<body>
-  <header class="rail">
-    <a class="wordmark" href="#top"><span class="pulse"></span> SUPPORT OPERATIONS WORKBENCH</a>
-    <nav aria-label="Case file navigation">
-      <a href="#intake">01 intake</a>
-      <a href="#triage">02 triage</a>
-      <a href="#investigation">03 investigate</a>
-      <a href="#handoff">04 handoff</a>
-      <a href="#architecture">system map</a>
-    </nav>
-    <a class="repo" href="https://github.com/Emmanuelasika/support-operations-workbench">SOURCE ↗</a>
-  </header>
-
-  <main id="top">
-    <section class="opening">
-      <div class="opening-copy">
-        <p class="kicker">OPERATOR CASE FILE / 017 / COMPLETE</p>
-        <h1>A customer pasted a <em>live token</em> into a production incident.</h1>
-        <p class="lede">Here is how I designed a support workflow that preserves the useful evidence, removes the dangerous part, creates clear ownership, and refuses to impersonate human judgment.</p>
-        <div class="byline">
-          <span>BUILT BY <b>EMMANUEL ASIKA</b></span>
-          <span>REFERENCE IMPLEMENTATION</span>
-          <span>FASTAPI + SQLITE</span>
-        </div>
-      </div>
-      <aside class="dispatch">
-        <div class="dispatch-head"><span>LIVE CASE STATE</span><i>● CLOSED</i></div>
-        <p class="case-number">CASE_92FD8C</p>
-        <h2>Production webhooks return 500</h2>
-        <dl>
-          <div><dt>PRIORITY</dt><dd class="danger">P1</dd></div>
-          <div><dt>OWNER</dt><dd>webhooks-on-call</dd></div>
-          <div><dt>AREA</dt><dd>technical</dd></div>
-          <div><dt>SLA</dt><dd>1 hour</dd></div>
-        </dl>
-        <div class="progress" aria-label="Case progress">
-          <span class="complete">INTAKE</span><span class="complete">TRIAGE</span><span class="complete">INVESTIGATE</span><span class="complete">HANDOFF</span>
-        </div>
-      </aside>
-    </section>
-
-    <section class="operator-note">
-      <b>DESIGN POSITION</b>
-      <p>The tool does not compose a customer reply. The risky work here is evidence handling and operational coordination—not prose generation.</p>
-    </section>
-
-    <section id="intake" class="chapter">
-      <header class="chapter-title"><span>01</span><div><p>14:32:07 UTC</p><h2>Unsafe intake arrives</h2></div><em>BOUNDARY EVENT</em></header>
-      <div class="split">
-        <article class="terminal before">
-          <div class="terminal-bar"><span>RAW CUSTOMER REPORT</span><i>NOT PERSISTED</i></div>
-          <pre><code>{
-  "subject": "Production webhooks return 500",
-  "description": "Started 14:32 UTC.
-    <mark>Bearer sk-live-do-not-store-123456</mark>
-    Request req_9d7. Three tenants affected.",
-  "area": "technical",
-  "customer_impact": "high",
-  "environment": "production"
-}</code></pre>
-        </article>
-        <div class="transform"><span>REDACT<br>BEFORE<br>WRITE</span><b>→</b></div>
-        <article class="terminal after">
-          <div class="terminal-bar"><span>SAFE CASE EVIDENCE</span><i>PERSISTED</i></div>
-          <pre><code>{
-  "description": "Started 14:32 UTC.
-    <ins>[REDACTED]</ins>
-    Request req_9d7. Three tenants affected.",
-  "fingerprint": "f3a91c83d8e1"
-}</code></pre>
-        </article>
-      </div>
-      <div class="margin-note"><b>Why this order matters</b><p>Cleaning data after insertion still leaves the secret in logs, traces, backups, or a failed write path. This implementation sanitizes subject, description, request ID, and transition notes before SQLite receives them.</p></div>
-    </section>
-
-    <section id="triage" class="chapter dark">
-      <header class="chapter-title"><span>02</span><div><p>14:32:08 UTC</p><h2>Policy makes the first call</h2></div><em>DETERMINISTIC</em></header>
-      <div class="decision-board">
-        <div class="input-stack">
-          <p>OBSERVED INPUTS</p>
-          <div><span>customer impact</span><b>HIGH</b></div>
-          <div><span>environment</span><b>PRODUCTION</b></div>
-          <div><span>area</span><b>TECHNICAL</b></div>
-        </div>
-        <div class="logic">
-          <span>IF high impact</span><i>OR</i><span>security incident</span><b>THEN</b>
-        </div>
-        <div class="verdict">
-          <p>CALCULATED</p>
-          <strong>P1</strong>
-          <span>critical risk</span>
-          <span>due 15:32 UTC</span>
-        </div>
-      </div>
-      <p class="explain">There is no hidden model confidence controlling urgency. Operators can inspect, test, and change the policy: critical cases get one hour; production or medium-impact cases get eight; lower-risk work gets 24.</p>
-    </section>
-
-    <section id="investigation" class="chapter">
-      <header class="chapter-title"><span>03</span><div><p>14:36–14:51 UTC</p><h2>Ownership becomes observable</h2></div><em>WORK IN PROGRESS</em></header>
-      <div class="workbench">
-        <div class="audit">
-          <h3>ACTIVITY TAPE</h3>
-          <div class="event"><time>14:32:08</time><i></i><p><b>system / created</b><span>Case created from sanitized intake.</span></p></div>
-          <div class="event"><time>14:36:41</time><i></i><p><b>support-triage / assigned</b><span>Assigned to webhooks-on-call.</span></p></div>
-          <div class="event active"><time>14:39:12</time><i></i><p><b>webhooks-on-call / investigating</b><span>Reproduced with req_9d7; signature verification fails before handler execution.</span></p></div>
-          <div class="event"><time>14:51:03</time><i></i><p><b>webhooks-on-call / awaiting approval</b><span>Prepared sanitized engineering escalation.</span></p></div>
-        </div>
-        <aside class="runbook">
-          <p>ACTIVE RUNBOOK / TECHNICAL</p>
-          <h3>Technical reproduction</h3>
-          <label><input type="checkbox" checked disabled> Create a minimal sanitized reproduction</label>
-          <label><input type="checkbox" checked disabled> Capture status, request ID, and timing</label>
-          <label><input type="checkbox" checked disabled> Compare successful and failed requests</label>
-          <div class="boundary"><b>CUSTOMER MESSAGE</b><span>Not generated</span><small>Owned by an approved human workflow</small></div>
-        </aside>
-      </div>
-      <div class="state-rule"><code>new → awaiting_approval</code><b>409 CONFLICT</b><p>The state machine rejects skipped investigation steps, even if a client submits a syntactically valid status.</p></div>
-    </section>
-
-    <section id="handoff" class="chapter paper">
-      <header class="chapter-title"><span>04</span><div><p>14:54:26 UTC</p><h2>Engineering receives a brief, not a transcript</h2></div><em>SAFE EXPORT</em></header>
-      <div class="handoff">
-        <div class="document">
-          <p class="doc-label">MARKDOWN EXPORT / CASE_92FD8C</p>
-          <h3>Production webhooks return 500</h3>
-          <table><tr><th>Status</th><td>awaiting_approval</td><th>Priority</th><td>P1</td></tr><tr><th>Owner</th><td>webhooks-on-call</td><th>Due</th><td>15:32 UTC</td></tr></table>
-          <h4>SAFE CASE</h4>
-          <p>Started 14:32 UTC. <code>[REDACTED]</code> Request req_9d7. Three tenants affected.</p>
-          <h4>INVESTIGATION</h4>
-          <p>Reproduced with req_9d7; signature verification fails before handler execution.</p>
-          <h4>AUDIT TRAIL</h4>
-          <p class="muted">Four actor-stamped events included in chronological order.</p>
-        </div>
-        <aside class="outcome">
-          <p>CASE OUTCOME</p>
-          <h3>Raw-body middleware consumed the payload before signature verification.</h3>
-          <ul><li>Runbook example corrected</li><li>Diagnostic guide proposed</li><li>Three affected tenants identified</li><li>No credential copied into handoff</li></ul>
-          <small>This outcome illustrates how the workflow is used; root-cause diagnosis itself remains human-owned.</small>
-        </aside>
-      </div>
-    </section>
-
-    <section class="chapter recurrence">
-      <header class="chapter-title"><span>05</span><div><p>AFTER CLOSURE</p><h2>One closure becomes product evidence</h2></div><em>FEEDBACK LOOP</em></header>
-      <div class="signal">
-        <div><span>f3a91c83d8e1</span><strong>5</strong><p>matching sanitized cases</p></div>
-        <b>→</b>
-        <div><span>HYPOTHESIS</span><h3>Webhook signature setup is failing at the middleware boundary.</h3><p>Validate against request samples before opening one product issue.</p></div>
-        <b>→</b>
-        <div><span>PRODUCT ACTION</span><h3>Improve raw-body guidance and add a diagnostic example.</h3><p>Replace repeated ticket labor with a durable fix.</p></div>
-      </div>
-      <p class="caution">A repeated fingerprint is a lead, not proof. The API says so explicitly because support volume should not be laundered into false certainty.</p>
-    </section>
-
-    <section id="architecture" class="chapter blueprint">
-      <header class="chapter-title"><span>SYS</span><div><p>IMPLEMENTATION MAP</p><h2>The whole system fits on one page</h2></div><em>INSPECTABLE</em></header>
-      <div class="system">
-        <div class="node input"><small>HTTP</small><b>Case intake</b><span>subject / evidence / impact</span></div>
-        <i>→</i><div class="node guard"><small>BOUNDARY</small><b>Redaction</b><span>before persistence</span></div>
-        <i>→</i><div class="node"><small>POLICY</small><b>Risk + SLA</b><span>explicit rules</span></div>
-        <i>→</i><div class="node database"><small>SQLITE</small><b>Case ledger</b><span>cases + audit events</span></div>
-        <div class="branches"><span>↙</span><span>↓</span><span>↘</span></div>
-        <div class="outputs"><div class="node"><b>Safe export</b><span>engineering handoff</span></div><div class="node"><b>State machine</b><span>guarded mutations</span></div><div class="node"><b>Insights</b><span>recurrence + overdue</span></div></div>
-      </div>
-      <div class="limits">
-        <h3>What I would add before production</h3>
-        <div><span>01</span><p><b>Identity and authorization</b>Tenant-scoped access, roles, and mutation policy.</p><span>02</span><p><b>Data governance</b>Reviewed PII detection, retention, encryption, and deletion.</p><span>03</span><p><b>Concurrency and delivery</b>Idempotency, event outbox, retries, and ticket-system integration.</p><span>04</span><p><b>Operations</b>Metrics, traces, pagination, backups, and migration monitoring.</p></div>
-      </div>
-    </section>
-
-    <section class="closing">
-      <p>OPEN SOURCE / MIT LICENSE</p>
-      <h2>Inspect the boundary.<br>Run the case yourself.</h2>
-      <div><a class="button" href="https://github.com/Emmanuelasika/support-operations-workbench">VIEW SOURCE ↗</a><a href="https://github.com/Emmanuelasika/support-operations-workbench#run-it">LOCAL SETUP →</a></div>
-      <small>Designed and built by Emmanuel Asika · Product support engineering portfolio</small>
-    </section>
-  </main>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An open-source workflow for safe, owned, auditable support investigations.">
+<meta property="og:title" content="Support Operations Workbench"><title>Support Operations Workbench</title><link rel="stylesheet" href="site.css"></head>
+<body><header class="nav"><a href="#top"><b>Support Operations Workbench</b></a><nav><a href="#workflow">How it works</a><a href="#example">Example</a><a href="#architecture">Architecture</a><a href="#quick-start">Quick start</a></nav><a href="https://github.com/Emmanuelasika/support-operations-workbench"><b>View on GitHub</b></a></header>
+<main id="top">
+<section class="hero"><small>OPEN-SOURCE SUPPORT ENGINEERING TOOL</small><h1>Move support cases from incomplete report to useful engineering evidence.</h1><p class="lead">Support Operations Workbench is a small FastAPI service for safe intake, clear ownership, guarded case states, audit history, and reusable engineering handoffs. It deliberately does not generate or send customer replies.</p><p class="buttons"><a class="primary" href="https://github.com/Emmanuelasika/support-operations-workbench">View source</a><a href="#quick-start">Run locally</a></p><ul class="summary"><li>Redacts secrets before storage</li><li>Calculates priority and SLA deadlines</li><li>Audits ownership and state changes</li><li>Exports safe engineering handoffs</li></ul></section>
+<section id="what-it-does"><header><small>WHAT IT DOES</small><h2>A focused workflow between support and engineering.</h2><p>The workbench provides enough structure to investigate responsibly without pretending to be a full ticketing platform or autonomous support agent.</p></header><div class="grid"><article><h3>Safe intake</h3><p>Subjects, descriptions, request IDs, and notes are redacted before SQLite receives them.</p></article><article><h3>Operational ownership</h3><p>Every case has a priority, deadline, status, and optional assignee.</p></article><article><h3>Guarded workflow</h3><p>Invalid state jumps return <code>409 Conflict</code>.</p></article><article><h3>Engineering handoff</h3><p>A Markdown export contains sanitized evidence, ownership, deadline, and audit history.</p></article><article><h3>Runbook guidance</h3><p>Access, billing, technical, and security cases receive bounded steps.</p></article><article><h3>Product signals</h3><p>Repeated fingerprints surface patterns without claiming ticket volume proves root cause.</p></article></div></section>
+<section id="users" class="wide"><header><small>WHO IT IS FOR</small><h2>Useful when a case needs investigation, not just a response.</h2></header><div class="grid"><article><h3>Product support engineers</h3><p>Collect reproducible evidence and prepare clean escalations.</p></article><article><h3>Technical support leads</h3><p>Track urgency, ownership, overdue work, and patterns.</p></article><article><h3>Developer relations teams</h3><p>Turn integration problems into documentation or SDK proposals.</p></article><article><h3>Engineering on-call</h3><p>Receive request IDs, timing, impact, and investigation history.</p></article></div><div class="callout"><h3>When it is useful</h3><ul><li>A customer pastes a token into a ticket but useful evidence must be retained.</li><li>A production failure is moving between teams without an owner.</li><li>An escalation has a transcript but no request ID, impact, or reproduction.</li><li>The same symptom keeps returning and needs product investigation.</li></ul></div></section>
+<section id="workflow"><header><small>STEP BY STEP</small><h2>How a case moves through the workbench</h2></header><ol class="steps"><li><b>1</b><div><h3>Capture the report</h3><p>Submit the issue, area, impact, environment, and request ID.</p></div></li><li><b>2</b><div><h3>Sanitize before storage</h3><p>Credential-shaped values are replaced before any write.</p></div></li><li><b>3</b><div><h3>Calculate urgency</h3><p>Visible policy assigns P1, P2, or P3 and an SLA deadline.</p></div></li><li><b>4</b><div><h3>Assign and investigate</h3><p>An owner follows the runbook and allowed states.</p></div></li><li><b>5</b><div><h3>Export the handoff</h3><p>Engineering receives a safe brief, not a transcript.</p></div></li><li><b>6</b><div><h3>Review recurring signals</h3><p>Matching fingerprints identify reports worth validating together.</p></div></li></ol></section>
+<section id="example" class="wide"><header><small>REALISTIC INTAKE</small><h2>A production webhook report containing a live token</h2><p>The incoming description is unsafe. The token never appears in the persisted case.</p></header><div class="code"><b>Request</b><pre><code>curl -s http://localhost:8000/api/cases \
+  -H 'content-type: application/json' \
+  -d '{
+    "subject": "Production webhooks return 500",
+    "description": "Started 14:32 UTC. Bearer sk-live-do-not-store-123456. Request req_9d7.",
+    "area": "technical",
+    "customer_impact": "high",
+    "environment": "production"
+  }'</code></pre></div><div class="code"><b>Safe output</b><pre><code>{
+  "id": "case_92fd8c10b614",
+  "risk": "critical",
+  "priority": "P1",
+  "status": "new",
+  "safe_case": {
+    "description": "Started 14:32 UTC. [REDACTED] Request req_9d7."
+  },
+  "requires_human_approval": true,
+  "customer_message": "Not generated: communication is owned by an approved human workflow."
+}</code></pre></div></section>
+<section id="case-study"><header><small>BEGINNING-TO-END CASE</small><h2>From webhook failure to product improvement</h2></header><div class="grid"><article><h3>1. Intake and priority</h3><p>Three production tenants are affected. The case becomes P1 with a one-hour deadline and the token is removed.</p></article><article><h3>2. Ownership</h3><p>The triage lead assigns <code>webhooks-on-call</code>; the audit records both people.</p></article><article><h3>3. Investigation</h3><p>The engineer reproduces with <code>req_9d7</code> and finds signature verification fails before the handler.</p></article><article><h3>4. Guarded approval</h3><p>The case moves new → investigating → awaiting approval. Skipping investigation returns 409.</p></article><article><h3>5. Handoff</h3><p>Engineering gets impact, owner, deadline, safe evidence, notes, and history without the token.</p></article><article><h3>6. Product follow-up</h3><p>Five matching fingerprints prompt validation and improved raw-body guidance.</p></article></div><p class="note"><b>Important:</b> the root cause is human investigation output. The workbench organizes evidence; it does not invent a diagnosis.</p></section>
+<section id="architecture" class="wide"><header><small>API AND ARCHITECTURE</small><h2>Small enough to inspect in one sitting</h2></header><div class="flow"><span>Case intake</span><i>→</i><span>Redaction</span><i>→</i><span>Risk + SLA</span><i>→</i><span>SQLite ledger</span></div><div class="outputs"><span><b>Workflow</b>Assignment, transitions, audit events</span><span><b>Safe export</b>Markdown engineering handoff</span><span><b>Insights</b>Recurrence and overdue work</span></div><table><tr><th>Method</th><th>Route</th><th>Purpose</th></tr><tr><td>POST</td><td><code>/api/cases</code></td><td>Sanitize, prioritize, persist</td></tr><tr><td>GET</td><td><code>/api/cases</code></td><td>Filter the queue</td></tr><tr><td>GET</td><td><code>/api/cases/{id}</code></td><td>Case, runbook, audit history</td></tr><tr><td>POST</td><td><code>/api/cases/{id}/assignment</code></td><td>Assign an owner</td></tr><tr><td>POST</td><td><code>/api/cases/{id}/transitions</code></td><td>Apply an allowed state</td></tr><tr><td>GET</td><td><code>/api/cases/{id}/export</code></td><td>Safe Markdown handoff</td></tr><tr><td>GET</td><td><code>/api/insights</code></td><td>Recurrence and overdue work</td></tr></table></section>
+<section id="quick-start"><header><small>QUICK START</small><h2>Run the application locally</h2></header><div class="code"><pre><code>git clone https://github.com/Emmanuelasika/support-operations-workbench.git
+cd support-operations-workbench
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload</code></pre></div><p>Open <code>localhost:8000</code> for the queue or <code>localhost:8000/docs</code> for the API explorer.</p></section>
+<section id="safety" class="wide"><header><small>SAFETY BOUNDARIES</small><h2>What is guaranteed—and what is not</h2></header><div class="two"><div><h3>Implemented</h3><ul><li>Redaction before persistence</li><li>Audited assignments and transitions</li><li>Rejected workflow jumps</li><li>Sanitized exports</li><li>No customer messaging</li></ul></div><div><h3>Not claimed</h3><ul><li>Complete PII detection</li><li>Multi-tenant storage</li><li>User authentication</li><li>Root-cause proof from fingerprints</li><li>A ticketing-platform replacement</li></ul></div></div></section>
+<section id="limitations"><header><small>BEFORE PRODUCTION</small><h2>What a real deployment still requires</h2></header><ul class="limits"><li><b>Identity:</b> authentication, roles, and tenant isolation.</li><li><b>Governance:</b> reviewed PII policy, encryption, retention, deletion, and backups.</li><li><b>Reliability:</b> idempotency, concurrency controls, migrations, pagination, and rate limits.</li><li><b>Integrations:</b> durable delivery to approved ticketing and incident systems.</li><li><b>Operations:</b> logs, metrics, traces, alerts, and recovery procedures.</li></ul><div class="cta"><h2>Review the code or run a case yourself.</h2><p>Open source under the MIT License.</p><a class="primary" href="https://github.com/Emmanuelasika/support-operations-workbench">Open the repository</a></div></section>
+</main><footer><span>Support Operations Workbench</span><span>Designed and built by Emmanuel Asika</span></footer></body></html>
